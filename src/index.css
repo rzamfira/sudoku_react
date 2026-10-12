@@ -1,0 +1,40 @@
+@font-face {
+    font-family: "Hauss";
+    src: url("fonts/als_hauss_regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Hauss";
+    src: url("fonts/als_hauss_medium.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+}
+
+:root {
+
+    --color-grid-primary: #344861;
+    --color-grid-cell-border: #BFC6D4;
+    --color-highlight-neighbors: #E2EBF3;
+    --color-highlight-selected: #BBDEFB;
+    --color-highlight-same-value: #C3D7EA;
+    --color-highlight-invalid-cell: #F7CFD6;
+    --color-controls-primary: #EAEEF4;
+    --color-grey: #6e7c8c;
+    --color-blue: #325AAF;
+    --color-red: #E55C6C;
+    --color-button-hover: #dce3ed;
+    --color-pause-button: #94A3B7;
+    --color-notes-background-text: #adb6c2;
+    --color-new-game-button: #5A7BC0;
+    --color-new-game-button-hover: #7091d5;
+    --color-white: #fff;
+    --color-won-overlay: rgba(234, 238, 244, 0.85);
+}
+
+body,
+html {
+    cursor: default;
+    font-family: Hauss, "sans-serif";
+}

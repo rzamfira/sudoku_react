@@ -3,14 +3,17 @@ import { useState } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [puzzle, setPuzzle] = useState(() => sudoku.generate('medium'));
+
+  console.log(sudoku.board_string_to_grid(puzzle));
 
   return (
     <div className="App">
       <h1>Sudoku</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <button onClick={() => setPuzzle(sudoku.generate('medium'))}>
+          New Game
         </button>
       </div>
     </div>
