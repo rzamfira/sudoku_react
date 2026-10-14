@@ -1,21 +1,25 @@
-import { useState } from 'react'
-
+import { useState, useEffect } from 'react'
+import Board from './Board'
 import './App.css'
 
 function App() {
+  const [puzzle, setPuzzle] = useState(null);
 
-  const [puzzle, setPuzzle] = useState(() => sudoku.generate('medium'));
-
-  console.log(sudoku.board_string_to_grid(puzzle));
+  useEffect(() => {
+    if (window.sudoku) {
+      const puzzleString = window.sudoku.generate('medium');
+      const puzzleGrid = window.sudoku.board_string_to_grid(puzzleString);
+      setPuzzle(puzzleGrid);
+    }
+  }, []);
 
   return (
     <div className="App">
-      <h1>Sudoku</h1>
-      <div className="card">
-        <button onClick={() => setPuzzle(sudoku.generate('medium'))}>
-          New Game
-        </button>
-      </div>
+      {puzzle ? (
+        <Board puzzle={puzzle} />
+      ) : (
+        <p>Loading puzzle...</p>
+      )}
     </div>
   )
 }
