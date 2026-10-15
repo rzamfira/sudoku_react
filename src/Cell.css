@@ -44,3 +44,7 @@
 .cell[data-row-index="6"] {
     border-top: none;
 }
+
+.selected {
+    background-color: var(--color-highlight-selected);
+}
