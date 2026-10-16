@@ -1,72 +1,50 @@
-import { useState, useEffect, useCallback } from 'react'
-import Board from './Board'
+import { useContext, useEffect } from 'react'
+import Board from './features/sudoku_board/Board.jsx'
 import './App.css'
+import { SudokuContext } from './features/SudokuContext.jsx';
+import { isCellEditable } from './features/sudoku_board/board-utils.js';
+import { useMemo } from 'react';
 
 export default function App() {
 
-  const [initialPuzzle, setInitialPuzzle] = useState(null);
-  const [userBoard, setUserBoard] = useState(null);
-  const [selectedCell, setSelectedCell] = useState({ rowIndex: 0, columnIndex: 0, squareIndex: 1 });
+  const { generateNewGame, selectedCell, initialPuzzle, updateCell } = useContext(SudokuContext);
 
-  const generateNewGame = () => {
+  const isEditable = useMemo(() =>
+    isCellEditable(initialPuzzle, selectedCell),
+    [initialPuzzle, selectedCell]
+  );
 
-    const puzzleString = window.sudoku.generate('medium');
-    const puzzleGrid = window.sudoku.board_string_to_grid(puzzleString);
-    setInitialPuzzle(puzzleGrid);
-    setSelectedCell({ rowIndex: 0, columnIndex: 0, squareIndex: 1 });
+  useEffect(() => {  // i should manage the events somewhere else, and here just call the functions?
 
-  };
+    const handleKeyDown = (e) => {
+      if (isEditable) {
+        if (e.key >= '1' && e.key <= '9') {
+          updateCell(selectedCell, e.key);
+        }
+        if (e.key === 'Backspace' || e.key === 'Delete') {
+          updateCell(selectedCell, '');
+        }
+      }
+    };
 
-  const isCellEditable = useCallback((rowIndex, columnIndex) => {
-    return initialPuzzle[rowIndex][columnIndex] === '.';
-  }, [initialPuzzle]);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
 
-  const onCellSelect = (rowIndex, columnIndex, squareIndex) => {
-    setSelectedCell({ rowIndex, columnIndex, squareIndex });
-  };
-
-  const updateCell = (rowIndex, columnIndex, value) => {
-
-    setUserBoard(prevBoard => {
-      const newBoard = prevBoard.map(row => [...row]);
-      newBoard[rowIndex][columnIndex] = value;
-      return newBoard;
-    });
-
-  };
-
-  useEffect(() => {
-
-    if (window.sudoku) {
-      generateNewGame();
-    }
-
-  }, [])
-
-  useEffect(() => {
-
-    if (initialPuzzle) {
-      setUserBoard(initialPuzzle.map(row => [...row]));
-    }
-
-  }, [initialPuzzle]);
-
+  }, [isEditable, selectedCell, updateCell]);
 
   return (
 
     <div className="App">
-      {userBoard ? (
-        <Board userBoard={userBoard} updateCell={updateCell} isCellEditable={isCellEditable}
-          selectedCell={selectedCell} onCellSelect={onCellSelect} />
-      ) : (
-        <p>Loading puzzle...</p>
-      )}
+
+      <Board />
+
       <div className="controls">
         <button onClick={generateNewGame} className="new-game-button">New Game</button>
       </div>
+
     </div>
 
-  )
+  );
 
 }
 

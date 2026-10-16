@@ -1,0 +1,17 @@
+.square {
+    min-width: 0;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    box-sizing: border-box;
+}
+
+.square.border-right {
+    border-right: 2px solid var(--color-grid-primary);
+}
+
+.square.border-bottom {
+    border-bottom: 2px solid var(--color-grid-primary);
+}
+
