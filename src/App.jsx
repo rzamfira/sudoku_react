@@ -3,26 +3,20 @@ import Board from './features/sudoku_board/Board.jsx'
 import './App.css'
 import { SudokuContext } from './features/SudokuContext.jsx';
 import { isCellEditable } from './features/sudoku_board/board-utils.js';
-import { useMemo } from 'react';
 
 export default function App() {
 
   const { generateNewGame, selectedCell, initialPuzzle, updateCell } = useContext(SudokuContext);
 
-  const isEditable = useMemo(() =>
-    isCellEditable(initialPuzzle, selectedCell),
-    [initialPuzzle, selectedCell]
-  );
-
-  useEffect(() => {  // i should manage the events somewhere else, and here just call the functions?
+  useEffect(() => {
 
     const handleKeyDown = (e) => {
-      if (isEditable) {
+      if (isCellEditable(initialPuzzle, selectedCell)) {
         if (e.key >= '1' && e.key <= '9') {
-          updateCell(selectedCell, e.key);
+          updateCell(e.key);
         }
         if (e.key === 'Backspace' || e.key === 'Delete') {
-          updateCell(selectedCell, '');
+          updateCell('');
         }
       }
     };
@@ -30,7 +24,7 @@ export default function App() {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
 
-  }, [isEditable, selectedCell, updateCell]);
+  }, [selectedCell, updateCell]);
 
   return (
 
