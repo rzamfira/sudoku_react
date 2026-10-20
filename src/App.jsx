@@ -1,30 +1,29 @@
 import { useContext, useEffect } from 'react'
+import { useKeyboard } from './features/hooks';
 import Board from './features/sudoku_board/Board.jsx'
 import './App.css'
 import { SudokuContext } from './features/SudokuContext.jsx';
-import { isCellEditable } from './features/sudoku_board/board-utils.js';
 
 export default function App() {
 
-  const { generateNewGame, selectedCell, initialPuzzle, updateCell } = useContext(SudokuContext);
+  const { generateNewGame, updateCell, moveCellSelection, handleNewGame } = useContext(SudokuContext);
 
-  useEffect(() => {
+  useEffect(() => { // should i have these two hooks here or inside the state?
 
-    const handleKeyDown = (e) => {
-      if (isCellEditable(initialPuzzle, selectedCell)) {
-        if (e.key >= '1' && e.key <= '9') {
-          updateCell(e.key);
-        }
-        if (e.key === 'Backspace' || e.key === 'Delete') {
-          updateCell('');
-        }
-      }
-    };
+    if (window.sudoku) {
+      generateNewGame();
+    }
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
-  }, [selectedCell, updateCell]);
+  const handleInputValue = (value) => updateCell(value);
+  const handleDeleteValue = () => updateCell('');
+
+  useKeyboard(
+    handleInputValue,
+    handleDeleteValue,
+    moveCellSelection
+  );
 
   return (
 
@@ -33,7 +32,7 @@ export default function App() {
       <Board />
 
       <div className="controls">
-        <button onClick={generateNewGame} className="new-game-button">New Game</button>
+        <button onClick={handleNewGame} className="new-game-button">New Game</button>
       </div>
 
     </div>

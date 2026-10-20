@@ -7,12 +7,10 @@ export default function Cell({ rowIndex, columnIndex, squareIndex }) {
 
     const { selectedCell, onCellSelect, userBoard } = useContext(SudokuContext);
 
-    const value = userBoard[rowIndex][columnIndex];
     const displayValue = useMemo(() => {
-
-        return value === 0 || value === '.' ? '' : value;
-
-    });
+        const cellValue = userBoard[rowIndex][columnIndex];
+        return cellValue === 0 || cellValue === '.' ? '' : cellValue;
+    }, [userBoard, rowIndex, columnIndex]);
 
     const isCurrentCellSelected = useMemo(() =>
         isCellSelected(selectedCell, rowIndex, columnIndex),
