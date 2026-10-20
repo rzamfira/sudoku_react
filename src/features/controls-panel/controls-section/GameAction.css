@@ -1,0 +1,46 @@
+.game-action-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.game-action-button {
+    width: clamp(44px, 18%, 60px);
+    aspect-ratio: 1 / 1;
+    height: auto;
+    flex: 0 1 auto;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-controls-primary);
+    border: 2px solid var(--color-controls-primary);
+    border-radius: 50%;
+    box-sizing: border-box;
+    cursor: pointer;
+    position: relative;
+}
+
+.game-action-button:hover {
+    background-color: var(--color-button-hover);
+}
+
+.icon-game-action {
+    height: 100%;
+    left: 50%;
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: .3s;
+    width: 55%;
+}
+
+
+.svg-path {
+    fill: rgb(50, 90, 175);
+    fill-rule: evenodd;
+}

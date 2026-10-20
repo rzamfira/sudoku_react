@@ -13,7 +13,7 @@ export default function Board() {
 
   return (
 
-    <div className="board">
+    <div className="sudoku-board">
       {Array.from({ length: 9 }, (_, i) => (
         <Square key={i} squareIndex={i + 1} />
       ))}

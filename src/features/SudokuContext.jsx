@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 import { useSelectedCell, useGameGeneration } from './hooks';
-import { isCellEditable } from './sudoku_board/board-utils';
+import { isCellEditable } from './sudoku-board/board-utils';
 
 export const SudokuContext = createContext();
 

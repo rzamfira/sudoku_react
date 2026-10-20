@@ -1,18 +1,17 @@
-.new-game-button {
+.App {
+    
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+        "board timer"
+        "board controls"
+        "board newGame";
 
-    min-height: 60px;
-    padding: 0 16px;
-    background-color: var(--color-new-game-button);
-    border: 0;
-    border-radius: 5px;
+    column-gap: clamp(12px, 2vw, 20px);
+    row-gap: clamp(8px, 1.5vw, 12px);
+    width: min(100%, 800px);
+
+    margin-inline: auto;
     box-sizing: border-box;
-    color: var(--color-white);
-    cursor: pointer;
-    font-size: 17px;
-    font-weight: 500;
-    transition: background-color 0.2s ease-in-out;
-}
-
-.new-game-button:hover {
-    background-color: var(--color-new-game-button-hover);
 }

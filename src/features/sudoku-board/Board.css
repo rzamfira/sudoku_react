@@ -1,5 +1,6 @@
-.board {
+.sudoku-board {
 
+    grid-area: board;
     width: clamp(250px, 100%, 500px);
     display: grid;
     grid-template-columns: repeat(3, 1fr);

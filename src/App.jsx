@@ -1,12 +1,15 @@
 import { useContext, useEffect } from 'react'
 import { useKeyboard } from './features/hooks';
-import Board from './features/sudoku_board/Board.jsx'
+import Board from './features/sudoku-board/Board.jsx'
+import Timer from './features/controls-panel/timer-section/Timer.jsx';
+import Controls from './features/controls-panel/controls-section/Controls.jsx';
+import NewGame from './features/controls-panel/new-game-section/NewGame.jsx';
 import './App.css'
 import { SudokuContext } from './features/SudokuContext.jsx';
 
 export default function App() {
 
-  const { generateNewGame, updateCell, moveCellSelection, handleNewGame } = useContext(SudokuContext);
+  const { generateNewGame, updateCell, moveCellSelection } = useContext(SudokuContext);
 
   useEffect(() => { // should i have these two hooks here or inside the state?
 
@@ -30,10 +33,9 @@ export default function App() {
     <div className="App">
 
       <Board />
-
-      <div className="controls">
-        <button onClick={handleNewGame} className="new-game-button">New Game</button>
-      </div>
+      <Timer />
+      <Controls />
+      <NewGame />
 
     </div>
 
