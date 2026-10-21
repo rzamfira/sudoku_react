@@ -1,11 +1,12 @@
 import { useContext, useMemo } from 'react';
-import { SudokuContext } from '../SudokuContext.jsx';
+import { BoardContext } from './BoardContext.jsx';
 import './Cell.css';
-import { isCellNeighbour, isCellSelected, getBorderClasses } from './board-utils.js';
+import { isCellNeighbour, isCellSelected } from '../../board-utils/cellState.js';
+import { getBorderClasses } from '../../board-utils/stylingHelpers.js';
 
 export default function Cell({ rowIndex, columnIndex, squareIndex }) {
 
-    const { selectedCell, onCellSelect, userBoard } = useContext(SudokuContext);
+    const { selectedCell, onSelectCell, userBoard } = useContext(BoardContext);
 
     const displayValue = useMemo(() => {
         const cellValue = userBoard[rowIndex][columnIndex];
@@ -36,7 +37,7 @@ export default function Cell({ rowIndex, columnIndex, squareIndex }) {
 
         <div
             className={classNames}
-            onClick={() => onCellSelect(rowIndex, columnIndex, squareIndex)}>
+            onClick={() => onSelectCell(rowIndex, columnIndex, squareIndex)}>
             {displayValue}
         </div>
 

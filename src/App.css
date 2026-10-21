@@ -1,5 +1,5 @@
 .App {
-    
+
     display: grid;
     grid-template-columns: 2fr 1fr;
     grid-template-rows: auto 1fr auto;
@@ -14,4 +14,29 @@
 
     margin-inline: auto;
     box-sizing: border-box;
+}
+
+.new-game-section {
+    grid-area: newGame;
+    width: 100%;
+}
+
+.new-game-button {
+
+    min-height: 60px;
+    padding: 0 16px;
+    background-color: var(--color-new-game-button);
+    border: 0;
+    border-radius: 5px;
+    box-sizing: border-box;
+    color: var(--color-white);
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 500;
+    transition: background-color 0.2s ease-in-out;
+
+}
+
+.new-game-button:hover {
+    background-color: var(--color-new-game-button-hover);
 }
