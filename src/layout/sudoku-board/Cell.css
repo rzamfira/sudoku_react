@@ -17,15 +17,39 @@
     position: relative;
 }
 
-.no-right-border { border-right: none; }
-.no-left-border { border-left: none; }
-.no-bottom-border { border-bottom: none; }
-.no-top-border { border-top: none; }
+.no-right-border {
+    border-right: none;
+}
+
+.no-left-border {
+    border-left: none;
+}
+
+.no-bottom-border {
+    border-bottom: none;
+}
+
+.no-top-border {
+    border-top: none;
+}
+
 
 .neighbour {
     background-color: var(--color-highlight-neighbors);
 }
 
+.conflict {
+    background-color: var(--color-highlight-invalid-cell);
+}
+
 .selected {
     background-color: var(--color-highlight-selected);
+}
+
+.valid-value {
+    color: var(--color-blue);
+}
+
+.invalid-value {
+    color: var(--color-red);
 }

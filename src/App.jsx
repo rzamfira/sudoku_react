@@ -1,4 +1,5 @@
 import { useEffect, useCallback, useState } from 'react'
+import { calculateSquareIndex } from './services/navigationService.js';
 import Board from './layout/sudoku-board/Board.jsx'
 import { BoardProvider } from './layout/sudoku-board/BoardContext.jsx';
 import './App.css'
@@ -9,15 +10,15 @@ import { moveCellSelection } from './services/navigationService.js';
 export default function App() {
 
   const { initialPuzzle, boardValues, setBoardValues, generateNewGame } = useSudokuGame();
-  const [selectedCell, setSelectedCell] = useState({ rowIndex: 0, columnIndex: 0 });
+  const [selectedCell, setSelectedCell] = useState({ rowIndex: 0, columnIndex: 0, squareIndex: calculateSquareIndex(0, 0) });
 
   const handleCellSelect = useCallback((rowIndex, columnIndex) => {
-    setSelectedCell({ rowIndex, columnIndex });
+    setSelectedCell({ rowIndex, columnIndex, squareIndex: calculateSquareIndex(rowIndex, columnIndex) });
   }, []);
 
-  const updateCell = useCallback((value) => {  // should I define this inside the game-actions as well?
+  const updateCell = useCallback((value) => {
 
-    if (isCellEditable(initialPuzzle, selectedCell)) {
+    if (isCellEditable(initialPuzzle, selectedCell.rowIndex, selectedCell.columnIndex)) {
 
       setBoardValues(prevBoard => {
         const newBoard = structuredClone(prevBoard);
@@ -65,7 +66,7 @@ export default function App() {
   return (
     <div className="App">
       {boardValues && (
-        <BoardProvider boardValues={boardValues} selectedCell={selectedCell} onSelectCell={handleCellSelect} >
+        <BoardProvider initialPuzzle={initialPuzzle} boardValues={boardValues} selectedCell={selectedCell} onSelectCell={handleCellSelect} >
           <Board />
         </BoardProvider>
       )}
