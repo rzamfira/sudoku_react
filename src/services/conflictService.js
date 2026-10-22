@@ -6,22 +6,21 @@ export function initializeConflicts() {
     return Array.from({ length: 9 }, () =>
         Array.from({ length: 9 }, () => [])
     );
-    
+
 }
 
 export function updateConflicts(conflicts, selectedCell, boardValues) {
 
     const updatedConflicts = structuredClone(conflicts);
 
-    return setConflictsFor(
-        selectedCell,
-        clearAllConflictsFor(selectedCell, updatedConflicts),
-        boardValues
-    );
+    clearConflicts(updatedConflicts, selectedCell);
+    addConflicts(updatedConflicts, selectedCell, boardValues);
+
+    return updatedConflicts;
 
 }
 
-function clearAllConflictsFor(selectedCell, conflictsMatrix) {
+function clearConflicts(conflictsMatrix, selectedCell) {
 
     for (const neighbor of getNeighborsOfCell(selectedCell)) {
 
@@ -35,14 +34,13 @@ function clearAllConflictsFor(selectedCell, conflictsMatrix) {
     }
 
     conflictsMatrix[selectedCell.rowIndex][selectedCell.columnIndex] = [];
-    return conflictsMatrix;
 
 }
 
-function setConflictsFor(selectedCell, conflictsMatrix, boardValues) {
+function addConflicts(conflictsMatrix, selectedCell, boardValues) {
 
     const value = boardValues[selectedCell.rowIndex][selectedCell.columnIndex];
-    if (value === '' || value === '.') {
+    if (value === '.') {
         return conflictsMatrix;
     }
 
@@ -54,8 +52,6 @@ function setConflictsFor(selectedCell, conflictsMatrix, boardValues) {
         }
 
     }
-
-    return conflictsMatrix;
 
 }
 

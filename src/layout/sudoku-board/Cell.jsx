@@ -13,7 +13,7 @@ export default function Cell({ rowIndex, columnIndex }) {
         return cellValue === 0 || cellValue === '.' ? '' : cellValue;
     }, [boardValues, rowIndex, columnIndex]);
 
-    const isEditable = useMemo(() =>
+    const isCurrentCellEditable = useMemo(() =>
         isCellEditable(initialPuzzle, rowIndex, columnIndex),
         [initialPuzzle, selectedCell, rowIndex, columnIndex]
     );
@@ -21,11 +21,11 @@ export default function Cell({ rowIndex, columnIndex }) {
         isCellSelected(selectedCell, rowIndex, columnIndex),
         [selectedCell, rowIndex, columnIndex]
     );
-    const isNeighbourOfCurrentCell = useMemo(() =>
+    const isNeighbourOfSelectedCell = useMemo(() =>
         isCellNeighbour(selectedCell, rowIndex, columnIndex),
         [selectedCell, rowIndex, columnIndex]
     );
-    const hasConflict = useMemo(() =>
+    const hasCurrentCellConflict = useMemo(() =>
         hasCellConflict(conflicts, rowIndex, columnIndex),
         [conflicts, rowIndex, columnIndex]
     );
@@ -38,10 +38,10 @@ export default function Cell({ rowIndex, columnIndex }) {
     const classNames = [
         'cell',
         isCurrentCellSelected && 'selected',
-        isNeighbourOfCurrentCell && 'neighbour',
-        hasConflict && 'conflict',
-        isEditable && hasConflict && 'invalid-value',
-        isEditable && !hasConflict && 'valid-value',
+        isNeighbourOfSelectedCell && 'neighbour',
+        hasCurrentCellConflict && 'conflict',
+        isCurrentCellEditable && hasCurrentCellConflict && 'invalid-value',
+        isCurrentCellEditable && !hasCurrentCellConflict && 'valid-value',
         borderClasses
     ].filter(Boolean).join(' ')
 

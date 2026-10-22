@@ -24,7 +24,9 @@ export function isCellNeighbour(selectedCell, rowIndex, columnIndex) {
 
     const sameRow = selectedCell.rowIndex === rowIndex;
     const sameColumn = selectedCell.columnIndex === columnIndex;
-    const sameSquare = selectedCell.squareIndex === calculateSquareIndex(rowIndex, columnIndex);
+    const sameSquare = calculateSquareIndex(selectedCell.rowIndex, selectedCell.columnIndex)
+        === calculateSquareIndex(rowIndex, columnIndex);
+
     return sameRow || sameColumn || sameSquare;
 
 }

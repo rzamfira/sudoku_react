@@ -1,5 +1,6 @@
-import { useEffect, useCallback, useState } from 'react'
+import { useEffect, useCallback, useState, useMemo } from 'react'
 import { calculateSquareIndex } from './services/navigationService.js';
+import { initializeConflicts, updateConflicts } from './services/conflictService.js';
 import Board from './layout/sudoku-board/Board.jsx'
 import { BoardProvider } from './layout/sudoku-board/BoardContext.jsx';
 import './App.css'
@@ -10,11 +11,17 @@ import { moveCellSelection } from './services/navigationService.js';
 export default function App() {
 
   const { initialPuzzle, boardValues, setBoardValues, generateNewGame } = useSudokuGame();
-  const [selectedCell, setSelectedCell] = useState({ rowIndex: 0, columnIndex: 0, squareIndex: calculateSquareIndex(0, 0) });
+  const [selectedCell, setSelectedCell] = useState({ rowIndex: 0, columnIndex: 0 });
+  const [conflicts, setConflicts] = useState(initializeConflicts());
 
   const handleCellSelect = useCallback((rowIndex, columnIndex) => {
-    setSelectedCell({ rowIndex, columnIndex, squareIndex: calculateSquareIndex(rowIndex, columnIndex) });
+    setSelectedCell({ rowIndex, columnIndex });
   }, []);
+
+  const handleMoveCellSelection = useCallback((direction) => {
+    const newCell = moveCellSelection(direction, selectedCell);
+    handleCellSelect(newCell.rowIndex, newCell.columnIndex);
+  }, [selectedCell, handleCellSelect]);
 
   const updateCell = useCallback((value) => {
 
@@ -23,19 +30,14 @@ export default function App() {
       setBoardValues(prevBoard => {
         const newBoard = structuredClone(prevBoard);
         newBoard[selectedCell.rowIndex][selectedCell.columnIndex] = value;
+
+        setConflicts(prev => updateConflicts(prev, selectedCell, newBoard));
         return newBoard;
       });
 
     }
 
-  }, [initialPuzzle, selectedCell, setBoardValues]);
-
-  const handleMoveCellSelection = useCallback((direction) => {
-
-    const newCell = moveCellSelection(direction, selectedCell);
-    handleCellSelect(newCell.rowIndex, newCell.columnIndex);
-
-  }, [selectedCell, handleCellSelect]);
+  }, [initialPuzzle, selectedCell, setBoardValues, setConflicts]);
 
   useEffect(() => {
     generateNewGame();
@@ -47,7 +49,7 @@ export default function App() {
       if (e.key >= '1' && e.key <= '9') {
         updateCell(e.key);
       } else if (e.key === 'Backspace' || e.key === 'Delete') {
-        updateCell('');
+        updateCell('.');
       } else if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
         handleMoveCellSelection(e.key);
       }
@@ -66,7 +68,7 @@ export default function App() {
   return (
     <div className="App">
       {boardValues && (
-        <BoardProvider initialPuzzle={initialPuzzle} boardValues={boardValues} selectedCell={selectedCell} onSelectCell={handleCellSelect} >
+        <BoardProvider initialPuzzle={initialPuzzle} boardValues={boardValues} selectedCell={selectedCell} onSelectCell={handleCellSelect} conflicts={conflicts} >
           <Board />
         </BoardProvider>
       )}
