@@ -1,46 +1,43 @@
 import { useEffect, useCallback, useState } from 'react'
 import Board from './layout/sudoku-board/Board.jsx'
+import { BoardProvider } from './layout/sudoku-board/BoardContext.jsx';
 import './App.css'
-import { useGameGeneration } from './game-actions/useGameGeneration.js';
-import { isCellEditable } from './board-utils/cellState.js';
-import { moveCellSelection } from './board-utils/navigationOperations.js';
+import { useSudokuGame } from './hooks/useSudokuGame.js';
+import { isCellEditable } from './services/cellService.js';
+import { moveCellSelection } from './services/navigationService.js';
 
 export default function App() {
 
-  const { initialPuzzle, userBoard, setUserBoard, generateNewGame } = useGameGeneration();
-  const [selectedCell, setSelectedCell] = useState({ rowIndex: 0, columnIndex: 0, squareIndex: 1 });
+  const { initialPuzzle, boardValues, setBoardValues, generateNewGame } = useSudokuGame();
+  const [selectedCell, setSelectedCell] = useState({ rowIndex: 0, columnIndex: 0 });
 
-  const onCellSelect = useCallback((rowIndex, columnIndex, squareIndex) => {
-    setSelectedCell({ rowIndex, columnIndex, squareIndex });
+  const handleCellSelect = useCallback((rowIndex, columnIndex) => {
+    setSelectedCell({ rowIndex, columnIndex });
   }, []);
 
   const updateCell = useCallback((value) => {  // should I define this inside the game-actions as well?
 
     if (isCellEditable(initialPuzzle, selectedCell)) {
 
-      setUserBoard(prevBoard => {
-        const newBoard = prevBoard.map(row => [...row]);
+      setBoardValues(prevBoard => {
+        const newBoard = structuredClone(prevBoard);
         newBoard[selectedCell.rowIndex][selectedCell.columnIndex] = value;
         return newBoard;
       });
 
     }
 
-  }, [initialPuzzle, selectedCell, setUserBoard]);
+  }, [initialPuzzle, selectedCell, setBoardValues]);
 
   const handleMoveCellSelection = useCallback((direction) => {
 
     const newCell = moveCellSelection(direction, selectedCell);
-    onCellSelect(newCell.rowIndex, newCell.columnIndex, newCell.squareIndex);
+    handleCellSelect(newCell.rowIndex, newCell.columnIndex);
 
-  }, [selectedCell, onCellSelect]);
+  }, [selectedCell, handleCellSelect]);
 
   useEffect(() => {
-
-    if (window.sudoku) {
-      generateNewGame();
-    }
-
+    generateNewGame();
   }, []);
 
   useEffect(() => {
@@ -67,11 +64,11 @@ export default function App() {
 
   return (
     <div className="App">
-      <Board
-        userBoard={userBoard}
-        selectedCell={selectedCell}
-        onSelectCell={onCellSelect}
-      />
+      {boardValues && (
+        <BoardProvider boardValues={boardValues} selectedCell={selectedCell} onSelectCell={handleCellSelect} >
+          <Board />
+        </BoardProvider>
+      )}
       {/* <div className="new-game-section">
         <button onClick={handleNewGame} className="new-game-button">New Game</button>
       </div> */}

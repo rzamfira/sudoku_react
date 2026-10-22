@@ -2,11 +2,12 @@ import { createContext } from 'react';
 
 export const BoardContext = createContext();
 
-export function BoardProvider({ children, selectedCell, onSelectCell, userBoard }) {
+export function BoardProvider({ children, boardValues, selectedCell, onSelectCell }) {
+
     const value = {
+        boardValues,
         selectedCell,
-        onSelectCell,
-        userBoard,
+        onSelectCell
     };
 
     return (
@@ -14,4 +15,5 @@ export function BoardProvider({ children, selectedCell, onSelectCell, userBoard 
             {children}
         </BoardContext.Provider>
     );
+
 }

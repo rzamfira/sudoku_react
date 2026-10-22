@@ -32,8 +32,6 @@ export function moveCellSelection(direction, selectedCell) {
     if (direction === 'ArrowLeft' && columnIndex > 0) newCol--;
     if (direction === 'ArrowRight' && columnIndex < 8) newCol++;
 
-    const newSquareIndex = calculateSquareIndex(newRow, newCol);
-
-    return { rowIndex: newRow, columnIndex: newCol, squareIndex: newSquareIndex };
+    return { rowIndex: newRow, columnIndex: newCol };
 
 }

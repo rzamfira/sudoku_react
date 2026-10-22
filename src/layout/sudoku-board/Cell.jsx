@@ -1,17 +1,17 @@
 import { useContext, useMemo } from 'react';
 import { BoardContext } from './BoardContext.jsx';
 import './Cell.css';
-import { isCellNeighbour, isCellSelected } from '../../board-utils/cellState.js';
-import { getBorderClasses } from '../../board-utils/stylingHelpers.js';
+import { isCellNeighbour, isCellSelected } from '../../services/cellService.js';
+import { getBorderClasses } from '../../services/stylingService.js';
 
-export default function Cell({ rowIndex, columnIndex, squareIndex }) {
+export default function Cell({ rowIndex, columnIndex }) {
 
-    const { selectedCell, onSelectCell, userBoard } = useContext(BoardContext);
+    const { selectedCell, onSelectCell, boardValues } = useContext(BoardContext);
 
     const displayValue = useMemo(() => {
-        const cellValue = userBoard[rowIndex][columnIndex];
+        const cellValue = boardValues[rowIndex][columnIndex];
         return cellValue === 0 || cellValue === '.' ? '' : cellValue;
-    }, [userBoard, rowIndex, columnIndex]);
+    }, [boardValues, rowIndex, columnIndex]);
 
     const isCurrentCellSelected = useMemo(() =>
         isCellSelected(selectedCell, rowIndex, columnIndex),
@@ -37,7 +37,7 @@ export default function Cell({ rowIndex, columnIndex, squareIndex }) {
 
         <div
             className={classNames}
-            onClick={() => onSelectCell(rowIndex, columnIndex, squareIndex)}>
+            onClick={() => onSelectCell(rowIndex, columnIndex)}>
             {displayValue}
         </div>
 

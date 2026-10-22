@@ -1,4 +1,4 @@
-import { calculateSquareIndex } from './navigationOperations.js';
+import { calculateSquareIndex } from './navigationService.js';
 
 export function isCellEditable(initialPuzzle, selectedCell) {
 

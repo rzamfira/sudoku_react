@@ -2,8 +2,8 @@
 import { useMemo } from 'react';
 import Cell from './Cell.jsx';
 import './Square.css';
-import { getCellCoordinatesFromSquare } from '../../board-utils/navigationOperations.js';
-import { getSquareBorderClasses } from '../../board-utils/stylingHelpers.js';
+import { getCellCoordinatesFromSquare } from '../../services/navigationService.js';
+import { getSquareBorderClasses } from '../../services/stylingService.js';
 
 
 export default function Square({ squareIndex }) {
@@ -23,8 +23,7 @@ export default function Square({ squareIndex }) {
         return (
           <Cell key={`${rowIndex}-${columnIndex}`}
             rowIndex={rowIndex}
-            columnIndex={columnIndex}
-            squareIndex={squareIndex} />
+            columnIndex={columnIndex} />
         );
       })}
     </div>
