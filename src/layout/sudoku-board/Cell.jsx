@@ -6,12 +6,17 @@ import { getBorderClasses } from '../../services/stylingService.js';
 
 export default function Cell({ rowIndex, columnIndex }) {
 
-    const { initialPuzzle, boardValues, selectedCell, onSelectCell, conflicts } = useContext(BoardContext);
+    const { initialPuzzle, boardValues, selectedCell, onSelectCell, conflicts, notesBoard } = useContext(BoardContext);
 
     const displayValue = useMemo(() => {
         const cellValue = boardValues[rowIndex][columnIndex];
         return cellValue === 0 || cellValue === '.' ? '' : cellValue;
     }, [boardValues, rowIndex, columnIndex]);
+
+    const cellNotes = useMemo(() =>
+        notesBoard[rowIndex][columnIndex],
+        [notesBoard, rowIndex, columnIndex]
+    );
 
     const isCurrentCellEditable = useMemo(() =>
         isCellEditable(initialPuzzle, rowIndex, columnIndex),
@@ -45,12 +50,31 @@ export default function Cell({ rowIndex, columnIndex }) {
         borderClasses
     ].filter(Boolean).join(' ')
 
+    const renderNotes = () => {
+
+        const notes = Array.from({ length: 9 }, (_, i) => i + 1);
+
+        return (
+            <div className="notes-grid">
+                {notes.map(note => {
+                    const isNoteActive = cellNotes.includes(note);
+                    return (
+                        <div key={note} className={`notes-value ${isNoteActive ? 'active' : ''}`}>
+                            {isNoteActive ? note : ''}
+                        </div>
+                    );
+                })}
+            </div>
+        );
+
+    };
+
     return (
 
         <div
             className={classNames}
             onClick={() => onSelectCell(rowIndex, columnIndex)}>
-            {displayValue}
+            {displayValue ? displayValue : renderNotes()}
         </div>
 
     );
