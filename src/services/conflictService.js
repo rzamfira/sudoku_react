@@ -9,32 +9,16 @@ export function initializeConflicts() {
 
 }
 
-export function updateConflicts(conflicts, selectedCell, boardValues) {
-
-    const updatedConflicts = structuredClone(conflicts);
-
-    clearConflicts(updatedConflicts, selectedCell);
-    addConflicts(updatedConflicts, selectedCell, boardValues);
-
-    return updatedConflicts;
-
-}
-
-function clearConflicts(conflictsMatrix, selectedCell) {
-
-    for (const neighbor of getNeighborsOfCell(selectedCell)) {
-
-        conflictsMatrix[neighbor.rowIndex][neighbor.columnIndex] =
-            conflictsMatrix[neighbor.rowIndex][neighbor.columnIndex].filter(
-                conflict =>
-                    conflict.rowIndex !== selectedCell.rowIndex ||
-                    conflict.columnIndex !== selectedCell.columnIndex
-            );
-
-    }
-
-    conflictsMatrix[selectedCell.rowIndex][selectedCell.columnIndex] = [];
-
+export function calculateAllConflicts(boardValues) {
+    const conflictsMatrix = initializeConflicts();
+    
+    Array.from({ length: 9 }, (_, row) =>
+        Array.from({ length: 9 }, (_, col) => {
+            addConflicts(conflictsMatrix, { rowIndex: row, columnIndex: col }, boardValues);
+        })
+    );
+    
+    return conflictsMatrix;
 }
 
 function addConflicts(conflictsMatrix, selectedCell, boardValues) {

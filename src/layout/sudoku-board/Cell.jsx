@@ -15,7 +15,7 @@ export default function Cell({ rowIndex, columnIndex }) {
 
     const isCurrentCellEditable = useMemo(() =>
         isCellEditable(initialPuzzle, rowIndex, columnIndex),
-        [initialPuzzle, selectedCell, rowIndex, columnIndex]
+        [initialPuzzle, rowIndex, columnIndex]
     );
     const isCurrentCellSelected = useMemo(() =>
         isCellSelected(selectedCell, rowIndex, columnIndex),

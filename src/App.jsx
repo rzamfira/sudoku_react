@@ -1,7 +1,7 @@
 import { useEffect, useCallback, useState, useMemo } from 'react'
-import { initializeConflicts, updateConflicts } from './services/conflictService.js';
+import { initializeConflicts, calculateAllConflicts } from './services/conflictService.js';
 import Board from './layout/sudoku-board/Board.jsx'
-import { BoardProvider } from './layout/sudoku-board/BoardContext.jsx';
+import { BoardProvider } from './layout/sudoku-board/BoardProvider.jsx';
 import './App.css'
 import { useSudokuGame } from './hooks/useSudokuGame.js';
 import { isCellEditable } from './services/cellService.js';
@@ -14,7 +14,11 @@ export default function App() {
 
   const { initialPuzzle, boardValues, setBoardValues, generateNewGame } = useSudokuGame();
   const [selectedCell, setSelectedCell] = useState({ rowIndex: 0, columnIndex: 0 });
-  const [conflicts, setConflicts] = useState(initializeConflicts());
+
+  const conflicts = useMemo(() => {
+    if (!boardValues) return initializeConflicts();
+    return calculateAllConflicts(boardValues);
+  }, [boardValues]);
 
   const handleCellSelect = useCallback((rowIndex, columnIndex) => {
     setSelectedCell({ rowIndex, columnIndex });
@@ -32,23 +36,21 @@ export default function App() {
       setBoardValues(prevBoard => {
         const newBoard = structuredClone(prevBoard);
         newBoard[selectedCell.rowIndex][selectedCell.columnIndex] = value;
-        // should i keep here the update of the conflicts? but then the function would not be pure
         return newBoard;
       });
 
     }
 
-  }, [initialPuzzle, selectedCell, setBoardValues, setConflicts]);
+  }, [initialPuzzle, selectedCell, setBoardValues]);
 
   const handleNewGame = useCallback(() => {
-    setConflicts(initializeConflicts());
     generateNewGame();
     handleCellSelect(0, 0);
-  }, [generateNewGame, handleCellSelect, setConflicts]);
+  }, [generateNewGame, handleCellSelect]);
 
   useEffect(() => {
     generateNewGame();
-  }, []);
+  }, [generateNewGame]);
 
   useEffect(() => {
 
@@ -66,11 +68,6 @@ export default function App() {
     return () => document.removeEventListener('keydown', handleKeyDown);
 
   }, [updateCell, handleMoveCellSelection]);
-
-  useEffect(() => {
-    if (!boardValues) return;
-    setConflicts(prev => updateConflicts(prev, selectedCell, boardValues));
-  }, [boardValues]);
 
   return (
     <div className="App">
