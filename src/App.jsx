@@ -15,8 +15,21 @@ export default function App() {
 
   const { initialPuzzle, boardValues, setBoardValues, generateNewGame } = useSudokuGame();
   const [selectedCell, setSelectedCell] = useState({ rowIndex: 0, columnIndex: 0 });
-  const [notesMode, setNotesMode] = useState(false);  
-  const [notesBoard, setNotesBoard] = useState(initializeNotesBoard()); 
+  const [notesMode, setNotesMode] = useState(false);
+  const [notesBoard, setNotesBoard] = useState(initializeNotesBoard());
+
+  const [history, setHistory] = useState([]);
+  const recordHistory = useCallback(() => {
+
+    setHistory(prev => [...prev, {
+      boardValues: structuredClone(boardValues),
+      notesBoard: structuredClone(notesBoard),
+      selectedCell
+    }]);
+
+  }, [boardValues, notesBoard, selectedCell]);
+
+  const updateCell = useUpdateCell(initialPuzzle, selectedCell, notesMode, setBoardValues, setNotesBoard, recordHistory);
 
   const conflicts = useMemo(() => {
     if (!boardValues) return initializeConflicts();
@@ -32,7 +45,6 @@ export default function App() {
     handleCellSelect(newCell.rowIndex, newCell.columnIndex);
   }, [selectedCell, handleCellSelect]);
 
-  const updateCell = useUpdateCell(initialPuzzle, selectedCell, notesMode, setBoardValues, setNotesBoard);
 
   const handleNewGame = useCallback(() => {
     generateNewGame();
@@ -42,6 +54,21 @@ export default function App() {
   const toggleNotesMode = useCallback(() => {
     setNotesMode(prev => !prev);
   }, []);
+
+  const handleUndo = useCallback(() => {
+
+    if (history.length === 0) {
+      return;
+    }
+
+    const lastState = history[history.length - 1];
+    setBoardValues(lastState.boardValues);
+    setNotesBoard(lastState.notesBoard);
+    setSelectedCell(lastState.selectedCell);
+
+    setHistory(prev => prev.slice(0, -1));
+
+  }, [history, setBoardValues, setNotesBoard, setSelectedCell]);
 
   useEffect(() => {
     generateNewGame();
@@ -73,7 +100,7 @@ export default function App() {
         </BoardProvider>
       )}
 
-      <GameControls updateCell={updateCell} notesMode={notesMode} toggleNotesMode={toggleNotesMode} />
+      <GameControls updateCell={updateCell} notesMode={notesMode} toggleNotesMode={toggleNotesMode} onUndo={handleUndo} />
       <Numpad updateCell={updateCell} />
       <NewGame onNewGame={handleNewGame} />
 

@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { isCellEditable } from '../services/cellService.js';
 import { updateCellNote, clearCellNotes } from '../services/notesService.js';
 
-export function useUpdateCell(initialPuzzle, selectedCell, notesMode, setBoardValues, setNotesBoard) {
+export function useUpdateCell(initialPuzzle, selectedCell, notesMode, setBoardValues, setNotesBoard, recordHistory) {
 
     const updateBoardValue = useCallback((cellValue) => {
         setBoardValues(prevBoard => {
@@ -13,6 +13,7 @@ export function useUpdateCell(initialPuzzle, selectedCell, notesMode, setBoardVa
     }, [selectedCell, setBoardValues]);
 
     return useCallback((value) => {
+        recordHistory();
 
         if (!isCellEditable(initialPuzzle, selectedCell.rowIndex, selectedCell.columnIndex)) {
             return;
@@ -31,6 +32,6 @@ export function useUpdateCell(initialPuzzle, selectedCell, notesMode, setBoardVa
             setNotesBoard(prev => clearCellNotes(prev, selectedCell.rowIndex, selectedCell.columnIndex));
         }
 
-    }, [initialPuzzle, selectedCell, notesMode, updateBoardValue, setNotesBoard]);
+    }, [initialPuzzle, selectedCell, notesMode, recordHistory, updateBoardValue, setNotesBoard]);
 }
 
