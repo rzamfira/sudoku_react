@@ -18,6 +18,11 @@ export default function Cell({ rowIndex, columnIndex }) {
         [notesBoard, rowIndex, columnIndex]
     );
 
+    const noteNumbers = useMemo(() =>
+        Array.from({ length: 9 }, (_, i) => i + 1),
+        []
+    );
+
     const isCurrentCellEditable = useMemo(() =>
         isCellEditable(initialPuzzle, rowIndex, columnIndex),
         [initialPuzzle, rowIndex, columnIndex]
@@ -50,33 +55,30 @@ export default function Cell({ rowIndex, columnIndex }) {
         borderClasses
     ].filter(Boolean).join(' ')
 
-    const renderNotes = () => {
-
-        const notes = Array.from({ length: 9 }, (_, i) => i + 1);
-
-        return (
-            <div className="notes-grid">
-                {notes.map(note => {
-                    const isNoteActive = cellNotes.includes(note);
-                    return (
-                        <div key={note} className={`notes-value ${isNoteActive ? 'active' : ''}`}>
-                            {isNoteActive ? note : ''}
-                        </div>
-                    );
-                })}
-            </div>
-        );
-
-    };
-
     return (
-
         <div
             className={classNames}
             onClick={() => onSelectCell(rowIndex, columnIndex)}>
-            {displayValue ? displayValue : renderNotes()}
+            {displayValue || (
+                <div className="notes-grid">
+                    {noteNumbers.map(note => (
+                        <Note 
+                            key={note} 
+                            note={note} 
+                            isActive={cellNotes.includes(note)} 
+                        />
+                    ))}
+                </div>
+            )}
         </div>
-
     );
 
+}
+
+function Note({ note, isActive }) {
+    return (
+        <div className={`notes-value ${isActive ? 'active' : ''}`}>
+            {isActive && note}
+        </div>
+    );
 }
