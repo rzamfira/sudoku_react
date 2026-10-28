@@ -38,3 +38,22 @@ html {
     cursor: default;
     font-family: Hauss, "sans-serif";
 }
+
+.App {
+
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+        "board timer"
+        "board controls"
+        "board newGame";
+
+    column-gap: clamp(12px, 2vw, 20px);
+    row-gap: clamp(8px, 1.5vw, 12px);
+    width: min(100%, 800px);
+
+    margin-inline: auto;
+    box-sizing: border-box;
+
+}

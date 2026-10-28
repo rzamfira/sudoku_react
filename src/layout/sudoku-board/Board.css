@@ -13,3 +13,25 @@
     align-self: stretch;
 
 }
+
+.pause-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    pointer-events: none;
+
+}
+
+.pause-overlay .icon-is-paused {
+    width: 60px;
+    height: auto;
+}
+
+.App.is-paused .pause-overlay {
+    display: flex;
+}

@@ -4,9 +4,11 @@ import './Cell.css';
 import { isCellNeighbour, isCellSelected, hasCellConflict, isCellEditable } from '../../services/cellService.js';
 import { getBorderClasses } from '../../services/stylingService.js';
 
+const NOTE_NUMBERS = Array.from({ length: 9 }, (_, i) => i + 1);
+
 export default function Cell({ rowIndex, columnIndex }) {
 
-    const { initialPuzzle, boardValues, selectedCell, onSelectCell, conflicts, notesBoard } = useContext(BoardContext);
+    const { initialPuzzle, boardValues, selectedCell, onSelectCell, conflicts, notesBoard, handleClick } = useContext(BoardContext);
 
     const displayValue = useMemo(() => {
         const cellValue = boardValues[rowIndex][columnIndex];
@@ -16,11 +18,6 @@ export default function Cell({ rowIndex, columnIndex }) {
     const cellNotes = useMemo(() =>
         notesBoard[rowIndex][columnIndex],
         [notesBoard, rowIndex, columnIndex]
-    );
-
-    const noteNumbers = useMemo(() =>
-        Array.from({ length: 9 }, (_, i) => i + 1),
-        []
     );
 
     const isCurrentCellEditable = useMemo(() =>
@@ -58,14 +55,19 @@ export default function Cell({ rowIndex, columnIndex }) {
     return (
         <div
             className={classNames}
-            onClick={() => onSelectCell(rowIndex, columnIndex)}>
-            {displayValue || (
+            onClick={(e) => {
+                e.stopPropagation();
+                handleClick(() => onSelectCell(rowIndex, columnIndex));
+            }}>
+            {displayValue ? (
+                <span className="cell-content">{displayValue}</span>
+            ) : (
                 <div className="notes-grid">
-                    {noteNumbers.map(note => (
-                        <Note 
-                            key={note} 
-                            note={note} 
-                            isActive={cellNotes.includes(note)} 
+                    {NOTE_NUMBERS.map(note => (
+                        <Note
+                            key={note}
+                            note={note}
+                            isActive={cellNotes.includes(note)}
                         />
                     ))}
                 </div>
@@ -76,9 +78,11 @@ export default function Cell({ rowIndex, columnIndex }) {
 }
 
 function Note({ note, isActive }) {
+
     return (
         <div className={`notes-value ${isActive ? 'active' : ''}`}>
             {isActive && note}
         </div>
     );
+
 }

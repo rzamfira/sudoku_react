@@ -1,4 +1,5 @@
 .game-controls {
+    grid-area: controls;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

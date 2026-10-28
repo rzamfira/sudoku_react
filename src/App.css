@@ -2,10 +2,11 @@
 
     display: grid;
     grid-template-columns: 2fr 1fr;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto auto auto auto;
     grid-template-areas:
         "board timer"
         "board controls"
+        "board numpad"
         "board newGame";
 
     column-gap: clamp(12px, 2vw, 20px);

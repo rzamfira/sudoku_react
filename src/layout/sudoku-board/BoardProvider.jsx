@@ -1,6 +1,6 @@
 import { BoardContext } from './BoardContext.jsx';
 
-export function BoardProvider({ children, initialPuzzle, boardValues, selectedCell, onSelectCell, conflicts, notesBoard }) {
+export function BoardProvider({ children, initialPuzzle, boardValues, selectedCell, onSelectCell, conflicts, notesBoard, isPaused, handleClick }) {
 
     const value = {
         initialPuzzle,
@@ -8,7 +8,9 @@ export function BoardProvider({ children, initialPuzzle, boardValues, selectedCe
         selectedCell,
         onSelectCell,
         conflicts,
-        notesBoard
+        notesBoard,
+        isPaused,
+        handleClick
     };
 
     return (
@@ -16,4 +18,5 @@ export function BoardProvider({ children, initialPuzzle, boardValues, selectedCe
             {children}
         </BoardContext.Provider>
     );
+
 }

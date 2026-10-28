@@ -2,6 +2,7 @@ import { useEffect, useCallback, useState, useMemo } from 'react'
 import { initializeConflicts, calculateAllConflicts } from './services/conflictService.js';
 import { initializeNotesBoard } from './services/notesService.js';
 import { useUpdateCell } from './hooks/useUpdateCell.js';
+import { useTimer } from './hooks/useTimer.js';
 import { useSudokuGame } from './hooks/useSudokuGame.js';
 import Board from './layout/sudoku-board/Board.jsx'
 import { BoardProvider } from './layout/sudoku-board/BoardProvider.jsx';
@@ -10,10 +11,12 @@ import { moveCellSelection } from './services/navigationService.js';
 import Numpad from './layout/controls-panel/Numpad.jsx';
 import GameControls from './layout/controls-panel/GameControls.jsx';
 import NewGame from './layout/controls-panel/NewGame.jsx';
+import Timer from './layout/controls-panel/Timer.jsx';
 
 export default function App() {
 
   const { initialPuzzle, boardValues, setBoardValues, generateNewGame } = useSudokuGame();
+  const { elapsedTime, isPaused, togglePause, resetTimer } = useTimer();
   const [selectedCell, setSelectedCell] = useState({ rowIndex: 0, columnIndex: 0 });
   const [notesMode, setNotesMode] = useState(false);
   const [notesBoard, setNotesBoard] = useState(initializeNotesBoard());
@@ -45,11 +48,15 @@ export default function App() {
     handleCellSelect(newCell.rowIndex, newCell.columnIndex);
   }, [selectedCell, handleCellSelect]);
 
-
   const handleNewGame = useCallback(() => {
+
     generateNewGame();
     handleCellSelect(0, 0);
-  }, [generateNewGame, handleCellSelect]);
+    setHistory([]);
+    setNotesBoard(initializeNotesBoard());
+    resetTimer(isPaused);
+
+  }, [generateNewGame, handleCellSelect, resetTimer, isPaused]);
 
   const toggleNotesMode = useCallback(() => {
     setNotesMode(prev => !prev);
@@ -70,6 +77,14 @@ export default function App() {
 
   }, [history, setBoardValues, setNotesBoard, setSelectedCell]);
 
+  const handlePausedInteraction = useCallback((action) => {
+    if (isPaused) {
+      togglePause();
+    } else {
+      action();
+    }
+  }, [isPaused, togglePause]);
+
   useEffect(() => {
     generateNewGame();
   }, [generateNewGame]);
@@ -78,33 +93,36 @@ export default function App() {
 
     const handleKeyDown = (e) => {
       if (e.key >= '1' && e.key <= '9') {
-        updateCell(e.key);
+        handlePausedInteraction(() => updateCell(e.key));
       } else if (e.key === 'Backspace' || e.key === 'Delete') {
-        updateCell('.');
+        handlePausedInteraction(() => updateCell('.'));
       } else if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-        handleMoveCellSelection(e.key);
+        handlePausedInteraction(() => handleMoveCellSelection(e.key));
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
 
-  }, [updateCell, handleMoveCellSelection]);
+  }, [updateCell, handleMoveCellSelection, handlePausedInteraction]);
 
   return (
-    <div className="App">
+
+    <div className={`App ${isPaused ? 'is-paused' : ''}`}>
 
       {boardValues && (
-        <BoardProvider initialPuzzle={initialPuzzle} boardValues={boardValues} selectedCell={selectedCell} onSelectCell={handleCellSelect} conflicts={conflicts} notesBoard={notesBoard}>
+        <BoardProvider initialPuzzle={initialPuzzle} boardValues={boardValues} selectedCell={selectedCell} onSelectCell={handleCellSelect} conflicts={conflicts} notesBoard={notesBoard} isPaused={isPaused} handleClick={handlePausedInteraction}>
           <Board />
         </BoardProvider>
       )}
 
-      <GameControls updateCell={updateCell} notesMode={notesMode} toggleNotesMode={toggleNotesMode} onUndo={handleUndo} />
-      <Numpad updateCell={updateCell} />
+      <Timer elapsedTime={elapsedTime} isPaused={isPaused} togglePause={togglePause} />
+      <GameControls updateCell={updateCell} notesMode={notesMode} toggleNotesMode={toggleNotesMode} onUndo={handleUndo} handleClick={handlePausedInteraction} />
+      <Numpad updateCell={updateCell} handleClick={handlePausedInteraction} />
       <NewGame onNewGame={handleNewGame} />
 
     </div>
+
   );
 
 }
