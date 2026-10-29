@@ -26,3 +26,20 @@
     box-sizing: border-box;
     gap: 12px;
 }
+
+.App.is-paused .pause-overlay {
+    display: flex;
+}
+
+.App.is-won .won-overlay {
+    display: flex;
+}
+
+.App.is-won .controls-section,
+.App.is-won .pause-button {
+    display: none;
+}
+
+.App.is-won {
+    grid-template-rows: auto auto auto;
+}

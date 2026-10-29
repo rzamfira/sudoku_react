@@ -1,28 +1,25 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
-export function useTimer() {
+export function useTimer(isGameWon) {
 
     const [elapsedTime, setElapsedTime] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
-    const intervalRef = useRef(null);
 
     useEffect(() => {
 
-        if (isPaused) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
+        if (isPaused || isGameWon) {
             return;
         }
 
-        intervalRef.current = setInterval(() => {
+        const intervalId = setInterval(() => {
             setElapsedTime(prev => prev + 1);
         }, 1000);
 
         return () => {
-            clearInterval(intervalRef.current);
+            clearInterval(intervalId);
         };
 
-    }, [isPaused, elapsedTime]);
+    }, [isPaused, elapsedTime, isGameWon]);
 
     const togglePause = useCallback(() => {
         setIsPaused(prev => !prev);

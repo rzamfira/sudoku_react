@@ -1,13 +1,15 @@
 import { useEffect, useCallback, useState, useMemo } from 'react'
-import { initializeConflicts, calculateAllConflicts } from './services/conflictService.js';
+import { initializeConflicts, calculateAllConflicts, hasConflicts } from './services/conflictService.js';
 import { initializeNotesBoard } from './services/notesService.js';
 import { useUpdateCell } from './hooks/useUpdateCell.js';
 import { useTimer } from './hooks/useTimer.js';
 import { useSudokuGame } from './hooks/useSudokuGame.js';
+import { useSolvePuzzle } from './hooks/useSolvePuzzle.js';
 import Board from './layout/sudoku-board/Board.jsx'
 import { BoardProvider } from './layout/sudoku-board/BoardProvider.jsx';
 import './App.css'
 import { moveCellSelection } from './services/navigationService.js';
+import { isBoardFilled } from './services/cellService.js';
 import Numpad from './layout/controls-panel/Numpad.jsx';
 import GameControls from './layout/controls-panel/GameControls.jsx';
 import NewGame from './layout/controls-panel/NewGame.jsx';
@@ -16,7 +18,7 @@ import Timer from './layout/controls-panel/Timer.jsx';
 export default function App() {
 
   const { initialPuzzle, boardValues, setBoardValues, generateNewGame } = useSudokuGame();
-  const { elapsedTime, isPaused, togglePause, resetTimer } = useTimer();
+
   const [selectedCell, setSelectedCell] = useState({ rowIndex: 0, columnIndex: 0 });
   const [notesMode, setNotesMode] = useState(false);
   const [notesBoard, setNotesBoard] = useState(initializeNotesBoard());
@@ -32,8 +34,6 @@ export default function App() {
 
   }, [boardValues, notesBoard, selectedCell]);
 
-  const updateCell = useUpdateCell(initialPuzzle, selectedCell, notesMode, setBoardValues, setNotesBoard, recordHistory);
-
   const conflicts = useMemo(() => {
     if (!boardValues) return initializeConflicts();
     return calculateAllConflicts(boardValues);
@@ -47,6 +47,13 @@ export default function App() {
     const newCell = moveCellSelection(direction, selectedCell);
     handleCellSelect(newCell.rowIndex, newCell.columnIndex);
   }, [selectedCell, handleCellSelect]);
+
+  const isGameWon = useMemo(() => {
+    return isBoardFilled(boardValues) && !hasConflicts(conflicts);
+  }, [boardValues, conflicts]);
+
+  const { elapsedTime, isPaused, togglePause, resetTimer } = useTimer(isGameWon);
+  const updateCell = useUpdateCell(initialPuzzle, selectedCell, notesMode, setBoardValues, setNotesBoard, recordHistory);
 
   const handleNewGame = useCallback(() => {
 
@@ -106,12 +113,14 @@ export default function App() {
 
   }, [updateCell, handleMoveCellSelection, handlePausedInteraction]);
 
+  useSolvePuzzle(boardValues, setBoardValues, setHistory, setNotesBoard);
+
   return (
 
-    <div className={`App ${isPaused ? 'is-paused' : ''}`}>
+    <div className={`App ${isPaused ? 'is-paused' : ''} ${isGameWon ? 'is-won' : ''}`}>
 
       {boardValues && (
-        <BoardProvider initialPuzzle={initialPuzzle} boardValues={boardValues} selectedCell={selectedCell} onSelectCell={handleCellSelect} conflicts={conflicts} notesBoard={notesBoard} isPaused={isPaused} handleClick={handlePausedInteraction}>
+        <BoardProvider initialPuzzle={initialPuzzle} boardValues={boardValues} selectedCell={selectedCell} onSelectCell={handleCellSelect} conflicts={conflicts} notesBoard={notesBoard} isPaused={isPaused} handleClick={handlePausedInteraction} isGameWon={isGameWon}>
           <Board />
         </BoardProvider>
       )}

@@ -6,10 +6,10 @@ export const useSudokuGame = () => {
     const [boardValues, setBoardValues] = useState(null);
 
     const generateNewGame = useCallback(() => {
-        const puzzleString = window.sudoku.generate('medium');
+        const puzzleString = window.sudoku.generate('easy');
         const puzzleGrid = window.sudoku.board_string_to_grid(puzzleString);
         setInitialPuzzle(puzzleGrid);
-        setBoardValues(puzzleGrid.map(row => [...row]));
+        setBoardValues(structuredClone(puzzleGrid));
     }, []);
 
     return { initialPuzzle, boardValues, setBoardValues, generateNewGame };

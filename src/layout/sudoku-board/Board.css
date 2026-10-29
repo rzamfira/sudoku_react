@@ -32,6 +32,19 @@
     height: auto;
 }
 
-.App.is-paused .pause-overlay {
-    display: flex;
+.won-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--color-won-overlay);
+    text-align: center;
+}
+
+.App.is-won .sudoku-board > :not(.won-overlay) {
+    display: none;
 }

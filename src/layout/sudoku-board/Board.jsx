@@ -7,7 +7,7 @@ import './Board.css';
 
 export default function Board() {
 
-  const { handleClick, isPaused } = useContext(BoardContext);
+  const { handleClick, isPaused, isGameWon } = useContext(BoardContext);
 
   return (
     <div className="sudoku-board" onClick={() => handleClick(() => { })}>
@@ -17,6 +17,11 @@ export default function Board() {
       {isPaused && (
         <div className="pause-overlay">
           <img className="icon-is-paused" src={PauseIcon} alt="pause" />
+        </div>
+      )}
+      {isGameWon && (
+        <div className="won-overlay">
+          <h2>You Won!</h2>
         </div>
       )}
     </div>

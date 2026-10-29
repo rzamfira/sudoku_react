@@ -43,3 +43,12 @@ export function getNeighborsOfCell(currentCell) {
     );
 
 }
+
+export function isBoardFilled(boardValues) {
+    if (!boardValues) {
+        return false;
+    }
+    return boardValues.every(row =>
+        row.every(cell => cell !== 0 && cell !== '.')
+    );
+}

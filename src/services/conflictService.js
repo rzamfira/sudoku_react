@@ -39,3 +39,9 @@ function addConflicts(conflictsMatrix, selectedCell, boardValues) {
 
 }
 
+export function hasConflicts(conflicts) {
+    return conflicts.some(row =>
+        row.some(cell => cell.length > 0)
+    );
+}
+
