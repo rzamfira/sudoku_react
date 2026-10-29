@@ -38,6 +38,10 @@
     background-color: var(--color-highlight-neighbors);
 }
 
+.same-value {
+    background-color: var(--color-highlight-same-value);
+}
+
 .conflict {
     background-color: var(--color-highlight-invalid-cell);
 }
@@ -86,6 +90,6 @@
     display: none;
 }
 
-.App.is-paused .cell:is(.neighbour, .valid-value, .invalid-value, .selected, .conflict) {
+.App.is-paused .cell:is(.neighbour, .valid-value, .invalid-value, .selected, .conflict, .same-value) {
     background-color: var(--color-white);
 }

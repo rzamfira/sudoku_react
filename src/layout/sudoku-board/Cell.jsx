@@ -10,10 +10,18 @@ export default function Cell({ rowIndex, columnIndex }) {
 
     const { initialPuzzle, boardValues, selectedCell, onSelectCell, conflicts, notesBoard, handleClick } = useContext(BoardContext);
 
-    const displayValue = useMemo(() => {
+    const currentCellDisplayValue = useMemo(() => {
         const cellValue = boardValues[rowIndex][columnIndex];
         return cellValue === 0 || cellValue === '.' ? '' : cellValue;
     }, [boardValues, rowIndex, columnIndex]);
+
+    const isSameValueAsSelected = useMemo(() => {
+
+        const currentCellValue = boardValues[rowIndex][columnIndex];
+        const selectedCellValue = boardValues[selectedCell.rowIndex][selectedCell.columnIndex];
+
+        return currentCellValue !== '.' && currentCellValue === selectedCellValue;
+    }, [selectedCell, boardValues, rowIndex, columnIndex]);
 
     const cellNotes = useMemo(() =>
         notesBoard[rowIndex][columnIndex],
@@ -47,6 +55,7 @@ export default function Cell({ rowIndex, columnIndex }) {
         isCurrentCellSelected && 'selected',
         isNeighbourOfSelectedCell && 'neighbour',
         hasCurrentCellConflict && 'conflict',
+        isSameValueAsSelected && 'same-value',
         isCurrentCellEditable && hasCurrentCellConflict && 'invalid-value',
         isCurrentCellEditable && !hasCurrentCellConflict && 'valid-value',
         borderClasses
@@ -59,8 +68,8 @@ export default function Cell({ rowIndex, columnIndex }) {
                 e.stopPropagation();
                 handleClick(() => onSelectCell(rowIndex, columnIndex));
             }}>
-            {displayValue ? (
-                <span className="cell-content">{displayValue}</span>
+            {currentCellDisplayValue ? (
+                <span className="cell-content">{currentCellDisplayValue}</span>
             ) : (
                 <div className="notes-grid">
                     {NOTE_NUMBERS.map(note => (

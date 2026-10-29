@@ -54,9 +54,9 @@ export default function App() {
     handleCellSelect(0, 0);
     setHistory([]);
     setNotesBoard(initializeNotesBoard());
-    resetTimer(isPaused);
+    resetTimer();
 
-  }, [generateNewGame, handleCellSelect, resetTimer, isPaused]);
+  }, [generateNewGame, handleCellSelect, resetTimer]);
 
   const toggleNotesMode = useCallback(() => {
     setNotesMode(prev => !prev);
@@ -117,8 +117,10 @@ export default function App() {
       )}
 
       <Timer elapsedTime={elapsedTime} isPaused={isPaused} togglePause={togglePause} />
-      <GameControls updateCell={updateCell} notesMode={notesMode} toggleNotesMode={toggleNotesMode} onUndo={handleUndo} handleClick={handlePausedInteraction} />
-      <Numpad updateCell={updateCell} handleClick={handlePausedInteraction} />
+      <div className="controls-section">
+        <GameControls updateCell={updateCell} notesMode={notesMode} toggleNotesMode={toggleNotesMode} onUndo={handleUndo} handleClick={handlePausedInteraction} />
+        <Numpad updateCell={updateCell} handleClick={handlePausedInteraction} />
+      </div>
       <NewGame onNewGame={handleNewGame} />
 
     </div>

@@ -9,13 +9,9 @@ export function useTimer() {
     useEffect(() => {
 
         if (isPaused) {
-
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-                intervalRef.current = null;
-            }
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
             return;
-
         }
 
         intervalRef.current = setInterval(() => {
@@ -23,32 +19,18 @@ export function useTimer() {
         }, 1000);
 
         return () => {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-            }
+            clearInterval(intervalRef.current);
         };
 
-    }, [isPaused]);
+    }, [isPaused, elapsedTime]);
 
     const togglePause = useCallback(() => {
         setIsPaused(prev => !prev);
     }, []);
 
-    const resetTimer = useCallback((currentIsPaused) => {
-
-        if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
-        }
+    const resetTimer = useCallback(() => {
         setElapsedTime(0);
         setIsPaused(false);
-
-        if (!currentIsPaused) {
-            intervalRef.current = setInterval(() => {
-                setElapsedTime(prev => prev + 1);
-            }, 1000);
-        }
-
     }, []);
 
     return { elapsedTime, isPaused, togglePause, resetTimer };

@@ -1,12 +1,10 @@
 .numpad {
-    grid-area: numpad;
     flex: 1;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: 6px;
     width: 100%;
-
 }
 
 .numpad-button {
