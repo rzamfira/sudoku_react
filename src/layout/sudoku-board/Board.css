@@ -45,6 +45,13 @@
     text-align: center;
 }
 
-.App.is-won .sudoku-board > :not(.won-overlay) {
+.App.is-won .sudoku-board> :not(.won-overlay) {
     display: none;
+}
+
+@media (max-width: 700px) {
+    .sudoku-board {
+        width: 100%;
+        justify-self: center;
+    }
 }

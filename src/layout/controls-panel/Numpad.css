@@ -27,3 +27,22 @@
 .numpad-button:hover {
     background-color: var(--color-button-hover);
 }
+
+@media (max-width: 700px) {
+    .numpad {
+        grid-template-columns: repeat(9, 1fr);
+        grid-template-rows: auto;
+        background-color: transparent;
+        gap: clamp(2px, 1vw, 6px);
+    }
+
+    .numpad-button {
+        height: auto;
+        font-size: clamp(35px, 7vw, 45px);
+        background-color: transparent;
+    }
+
+    .numpad-button:hover {
+        background-color: transparent;
+    }
+}

@@ -86,3 +86,10 @@
 .App.is-paused .pause-button .play-icon {
     display: block;
 }
+
+@media (max-width: 700px) {
+    .timer {
+        grid-area: header;
+        justify-content: flex-end;
+    }
+}

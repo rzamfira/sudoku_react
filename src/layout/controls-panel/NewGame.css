@@ -23,3 +23,19 @@
 .new-game-button:hover {
     background-color: var(--color-new-game-button-hover);
 }
+
+@media (max-width: 700px) {
+    .new-game-section {
+        grid-area: header;
+        width: clamp(110px, 25vw, 160px);
+        justify-self: start;
+    }
+
+    .new-game-button {
+        width: auto;
+        min-width: max-content;
+        min-height: clamp(35px, 5vw, 44px);
+        font-size: clamp(10px, 3vw, 13px);
+        white-space: nowrap;
+    }
+}

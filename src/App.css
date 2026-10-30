@@ -43,3 +43,23 @@
 .App.is-won {
     grid-template-rows: auto auto auto;
 }
+
+@media (max-width: 700px) {
+    .App {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        grid-template-areas:
+            "header"
+            "board"
+            "controls";
+
+        gap: clamp(8px, 1.5vw, 12px);
+        width: min(100%, 500px);
+    }
+}
+
+@media (max-width: 500px) {
+    .App {
+        width: min(100%, 400px);
+    }
+}
